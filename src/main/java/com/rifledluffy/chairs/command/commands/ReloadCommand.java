@@ -1,5 +1,6 @@
 package com.rifledluffy.chairs.command.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -7,8 +8,6 @@ import org.bukkit.entity.Player;
 import com.rifledluffy.chairs.RFChairs;
 import com.rifledluffy.chairs.chairs.BlockFilter;
 import com.rifledluffy.chairs.config.ConfigManager;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class ReloadCommand extends SubCommand {
 	

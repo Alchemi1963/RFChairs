@@ -36,12 +36,12 @@ public class BlockFilter {
     }
     
     public static boolean isWhitelisted(Material type, String category) {
-        if (whitelist.contains("ALL_" + category)) return true;
+        if (whitelist.contains(category + "*")) return true;
         return whitelist.contains(type.name());
     }
     
     public static boolean isBlacklisted(Material type, String category) {
-        if (blacklist.contains("ALL_" + category)) return true;
+        if (blacklist.contains(category + "*")) return true;
         return blacklist.contains(type.name());
     }
     

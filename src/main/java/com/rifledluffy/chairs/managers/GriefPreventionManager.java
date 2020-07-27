@@ -1,11 +1,9 @@
 package com.rifledluffy.chairs.managers;
 
-import me.ryanhamshire.GriefPrevention.Claim;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Location;
 
-import java.util.HashMap;
-import java.util.Map;
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 public class GriefPreventionManager {
 

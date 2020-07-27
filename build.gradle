@@ -1,0 +1,92 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+	id 'eclipse'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+		url = 'http://maven.sk89q.com/repo/'
+	}
+	maven {
+		url = 'https://jitpack.io'
+	}
+	maven {
+		url = "https://mvn.intellectualsites.com/content/groups/public/"
+	}
+}
+
+dependencies {
+	implementation 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
+	implementation 'com.sk89q.worldguard:worldguard-core:7.0.4-SNAPSHOT'
+	implementation 'com.sk89q.worldguard:worldguard-bukkit:7.0.4-SNAPSHOT'
+	implementation 'com.github.TechFortress:GriefPrevention:16.14.0'
+	implementation 'com.plotsquared:PlotSquared-Core:5.13.0'
+	implementation 'com.googlecode.json-simple:json-simple:1.1'
+	compileOnly 'org.jetbrains:annotations:17.0.0'
+}
+
+group = 'com.rifledluffy'
+version = '6.1.0'
+description = 'RFChairsContinued'
+sourceCompatibility = '1.8'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+task copy(type: Copy) {
+	dependsOn 'jar'
+	group = 'Build'
+	description = 'Install project to Test-Server.'
+	
+	from jar.archivePath
+	into '../Test-Server/plugins/'
+	rename '(.*)-(.*).jar', '$1.jar'
+	
+	doLast{
+		project.logger.lifecycle 'Installing jar file from ' + jar.archivePath
+	}
+}
+
+processResources {
+	filter  { line -> line.replaceAll('\\$\\{project.version\\}', project.version)}
+}
+
+task export(type: Copy) {
+	dependsOn 'jar'
+	dependsOn 'publishToMavenLocal'
+	finalizedBy 'incrementVersion'
+	
+	from jar.archivePath
+	into 'target/'
+
+	doLast{
+		project.logger.lifecycle 'Exporting to jar file.'
+	}
+}
+
+task incrementVersion {
+	doFirst{
+		String minor=version.substring(version.lastIndexOf('.')+1)
+		int m=minor.toInteger()+1
+		String major=version.substring(0,version.length()-1)
+		String s=buildFile.getText().replaceFirst('version = \'' + project.version + '\'','version = \''+major+m+'\'')
+		buildFile.setText(s)
+
+		project.logger.lifecycle 'New version ' + major + m
+	}
+}
+
+eclipse {
+	autoBuildTasks copy
+	project.natures 'org.eclipse.buildship.core.gradleprojectnature'
+}

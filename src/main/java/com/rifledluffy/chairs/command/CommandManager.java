@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +18,6 @@ import com.rifledluffy.chairs.command.commands.ResetCommand;
 import com.rifledluffy.chairs.command.commands.SubCommand;
 import com.rifledluffy.chairs.command.commands.ToggleCommand;
 
-import net.md_5.bungee.api.ChatColor;
 
 public class CommandManager implements CommandExecutor {
 	
@@ -37,7 +37,6 @@ public class CommandManager implements CommandExecutor {
 
     public void setup() {
         plugin.getCommand(main).setExecutor(this);
-
         this.commands.add(new HelpCommand());
         this.commands.add(new InfoCommand());
         this.commands.add(new ReloadCommand());

@@ -1,17 +1,13 @@
 package com.rifledluffy.chairs;
 
-import com.rifledluffy.chairs.chairs.BlockFilter;
-import com.rifledluffy.chairs.chairs.Chair;
-import com.rifledluffy.chairs.config.ConfigManager;
-import com.rifledluffy.chairs.events.ChairCheckEvent;
-import com.rifledluffy.chairs.events.ChairLeaveEvent;
-import com.rifledluffy.chairs.events.ChairReplaceEvent;
-import com.rifledluffy.chairs.events.ChairSitEvent;
-import com.rifledluffy.chairs.events.ChairTossEvent;
-import com.rifledluffy.chairs.messages.MessageConstruct;
-import com.rifledluffy.chairs.messages.MessageEvent;
-import com.rifledluffy.chairs.messages.MessageType;
-import com.rifledluffy.chairs.utility.Util;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -36,7 +32,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -45,17 +40,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.rifledluffy.chairs.chairs.BlockFilter;
+import com.rifledluffy.chairs.chairs.Chair;
+import com.rifledluffy.chairs.config.ConfigManager;
+import com.rifledluffy.chairs.events.ChairCheckEvent;
+import com.rifledluffy.chairs.events.ChairLeaveEvent;
+import com.rifledluffy.chairs.events.ChairReplaceEvent;
+import com.rifledluffy.chairs.events.ChairSitEvent;
+import com.rifledluffy.chairs.events.ChairTossEvent;
+import com.rifledluffy.chairs.messages.MessageConstruct;
+import com.rifledluffy.chairs.messages.MessageEvent;
+import com.rifledluffy.chairs.messages.MessageType;
+import com.rifledluffy.chairs.utility.Util;
 
 public class ChairManager implements Listener {
 	
@@ -117,8 +116,8 @@ public class ChairManager implements Listener {
 		regenEffect = new PotionEffect(PotionEffectType.REGENERATION, 655200, config.getInt("regen-potency", 0), false, false);
 		regenWhenSitting = config.getBoolean("regen-when-sitting", true);
 		
-		disableCurrentUpdate = config.getBoolean("disable-update-message-if-on-latest", false);
-		disableUpdates = config.getBoolean("disable-update-messages", false);
+		setDisableCurrentUpdate(config.getBoolean("disable-update-message-if-on-latest", false));
+		setDisableUpdates(config.getBoolean("disable-update-messages", false));
 		
 		faceAttacker = config.getBoolean("face-attacker-when-ejected", false);
 		canToss = config.getBoolean("toss-player", false);
@@ -366,9 +365,9 @@ public class ChairManager implements Listener {
 			}
 		} else if (block.getRelative(BlockFace.UP).getType() != Material.AIR) return;
 		
-		if (BlockFilter.isSlabBlock(block.getType())) if (!Util.validSlab(block)) return;
+		else if (BlockFilter.isSlabBlock(block.getType())) if (!Util.validSlab(block)) return;
 		
-		if (BlockFilter.isCarpetBlock(block.getType())) if (!Util.validCarpet(block)) return;
+		else if (BlockFilter.isCarpetBlock(block.getType())) if (!Util.validCarpet(block)) return;
 		
 		if (event.getBlockFace() == BlockFace.DOWN) return;
 		
@@ -624,6 +623,22 @@ public class ChairManager implements Listener {
 		} else {
 			plugin.getServer().getLogger().info("[RFChairs] No fake seats remaining! Proceeding");
 		}
+	}
+
+	public boolean isDisableCurrentUpdate() {
+		return disableCurrentUpdate;
+	}
+
+	public void setDisableCurrentUpdate(boolean disableCurrentUpdate) {
+		this.disableCurrentUpdate = disableCurrentUpdate;
+	}
+
+	public boolean isDisableUpdates() {
+		return disableUpdates;
+	}
+
+	public void setDisableUpdates(boolean disableUpdates) {
+		this.disableUpdates = disableUpdates;
 	}
 
 }

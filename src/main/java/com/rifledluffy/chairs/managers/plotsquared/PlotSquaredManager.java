@@ -1,20 +1,19 @@
-package com.rifledluffy.chairs.managers;
+package com.rifledluffy.chairs.managers.plotsquared;
 
-import com.github.intellectualsites.plotsquared.api.PlotAPI;
-import com.github.intellectualsites.plotsquared.plot.flag.BooleanFlag;
+import com.plotsquared.core.api.PlotAPI;
+import com.plotsquared.core.location.Location;
+import com.plotsquared.core.plot.flag.GlobalFlagContainer;
 import com.rifledluffy.chairs.chairs.Chair;
-import com.github.intellectualsites.plotsquared.plot.object.Location;
 
 public class PlotSquaredManager {
 
     private PlotAPI api;
-    private BooleanFlag seating = new BooleanFlag("seating");
 
     public PlotSquaredManager() {}
 
     public void setup() {
-        api = new PlotAPI();
-        api.addFlag(seating);
+    	api = new PlotAPI();
+        GlobalFlagContainer.getInstance().addFlag(new SeatingFlag(true));
     }
 
     public boolean canSit(Chair chair) {
@@ -23,7 +22,7 @@ public class PlotSquaredManager {
 
         return api.getAllPlots().stream()
                 .filter(plot -> plot.getArea().contains(loc))
-                .noneMatch(plot -> plot.getFlag(seating).orElse(true));
+                .noneMatch(plot -> plot.getFlag(SeatingFlag.class));
     }
 
 }
