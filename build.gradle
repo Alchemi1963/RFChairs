@@ -31,7 +31,7 @@ dependencies {
 }
 
 group = 'com.rifledluffy'
-version = '6.1.0'
+version = '6.1.1'
 description = 'RFChairsContinued'
 sourceCompatibility = '1.8'
 
@@ -58,7 +58,10 @@ task copy(type: Copy) {
 }
 
 processResources {
-	filter  { line -> line.replaceAll('\\$\\{project.version\\}', project.version)}
+	from ('src/main/resources'){
+		include '**/*.yml'
+		filter  { line -> line.replaceAll('\\$\\{project.version\\}', project.version) }
+	}
 }
 
 task export(type: Copy) {

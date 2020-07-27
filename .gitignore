@@ -5,6 +5,7 @@
 build
 bin
 build
+target
 .settings
 .classpath
 .project
